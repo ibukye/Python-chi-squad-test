@@ -1,1 +1,77 @@
-a = int(input('数字を入力してください'))
+import numpy as np
+row = int(input('how many row:'))
+column = int(input('how many column:'))
+p = row*column
+#make graph
+a = np.arange(p).reshape((row, column))
+i, j = 0, 0
+for i in range(row):
+    for j in range(column):
+        a[i][j] = int(input('put element from 1st:'))
+        j += 1
+        if j == column:
+            j = 0
+            i += 1
+            if i == row-1:
+                break
+print(a)    
+
+#sum of row
+SR = np_sum_row = np.sum(a,axis=1)
+print('sum of row is')
+print(SR.reshape(row,1))   #reshapeがおかしい　色がつかない
+SR = SR.tolist()           #tolistも
+#sum of column
+SC = np_sum_column = np.sum(a,axis=0)
+print('sum of column is',SC)
+SC = SC.tolist()
+#total
+T = Total = np.sum(a)
+print('Total is',Total)
+
+#expected value
+b = np.arange(p).reshape((row, column))
+i, j = 0, 0
+for i in range(row):
+    for j in range(column):
+        b[i][j] = (SR[i]*SC[j])/T
+        j += 1
+        if j == column:
+            j = 0
+            i += 1
+            if i == row-1:
+                break
+print('expected values are')
+print(b)
+
+#subtraction
+s = a - b
+#yates' correction or chi
+select = input('chi or yates:')
+if select == 'chi':
+    s = s**2
+else:
+    s = abs(s)
+    s = list(map(lambda x:x-0.5,s))
+    s = list(map(lambda x:x**2,s))
+    
+#dividing and adding and sigma
+sum = 0
+i, j =0, 0
+for i in range(row):
+    for j  in range(column):
+        sum += s[i][j]/b[i][j]
+        j += 1
+        if j == column:
+            j = 0
+            i += 1
+            if i == row-1:
+                break
+#print method  
+if select == 'chi':
+    print('chi-squad value is',sum)
+else:
+    print('yates is',sum)
+#degree of freedom
+df = degree_of_freedom = (row-1)*(column-1)
+print('degree of freedom is',df)
